@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3E5FA1122CEB96270014C5D8 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 3E5FA1112CEB961F0014C5D8 /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		3E5FA1002CEB92290014C5D8 /* TravelAgency.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TravelAgency.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E5FA1112CEB961F0014C5D8 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +37,7 @@
 		3E5FA0F72CEB92290014C5D8 = {
 			isa = PBXGroup;
 			children = (
+				3E5FA1112CEB961F0014C5D8 /* .gitignore */,
 				3E5FA1022CEB92290014C5D8 /* TravelAgency */,
 				3E5FA1012CEB92290014C5D8 /* Products */,
 			);
@@ -109,6 +115,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E5FA1122CEB96270014C5D8 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
