@@ -5,6 +5,7 @@ struct TripBuilderView: View {
     @State var destination: String = ""
     @State var showWeb: Bool = false
     @State var urlString: String = ""
+    @State var savedtrip: String? = nil
     
     let locations = ["New York", "Los Angeles", "Chicago", "San Francisco", "Miami"]
     
@@ -52,7 +53,10 @@ struct TripBuilderView: View {
             .navigationTitle("Trip Builder")
             .padding()
             .sheet(isPresented: $showWeb) {
-                WebView(urlString: $urlString)
+                WebView(urlString: $urlString) {
+                    savedtrip = "Trip Selected"
+                    showWeb = false
+                }
             }
         }
     }
