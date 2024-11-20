@@ -8,11 +8,25 @@
 import SwiftUI
 
 struct PopularView: View {
+    @EnvironmentObject var BM: BusinessModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            List(BM.testLocations, id: \.name) { location in
+                NavigationLink(destination: LocationView(location: location)) {
+                    VStack(alignment: .leading) {
+                        Text(location.name)
+                            .font(.largeTitle)
+                    }
+                    .padding(.vertical, 5)
+                }
+            }
+            .navigationTitle("Popular Locations")
+        }
     }
 }
 
 #Preview {
     PopularView()
+        .environmentObject(BusinessModel())
 }

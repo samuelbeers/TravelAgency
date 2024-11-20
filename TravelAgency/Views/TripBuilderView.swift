@@ -21,6 +21,9 @@ struct TripBuilderView: View {
                 .pickerStyle(WheelPickerStyle())
                 .padding()
                 
+                Text("To")
+                    .font(.largeTitle)
+                    .padding(.vertical, 0)
 
                 Picker("Destination", selection: $destination) {
                     ForEach(locations, id: \.self) { location in
@@ -28,7 +31,7 @@ struct TripBuilderView: View {
                     }
                 }
                 .pickerStyle(WheelPickerStyle())
-                .padding()
+                .padding(.bottom, 10)
                 
 
                 if !startingLocation.isEmpty && !destination.isEmpty && startingLocation != destination {
