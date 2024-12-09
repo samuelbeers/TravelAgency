@@ -8,11 +8,25 @@
 import SwiftUI
 
 struct YourTripsView: View {
+    @EnvironmentObject var tripManager: TripManager
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List(tripManager.trips, id: \.startingLocation) { trip in
+            VStack(alignment: .leading) {
+                Text("From: \(trip.startingLocation)")
+                    .font(.headline)
+                Text("To: \(trip.destination)")
+                Text("Price: \(trip.price)")
+                Text("Duration: \(trip.totalTime)")
+            }
+            .padding()
+        }
+        .navigationTitle("Your Trips")
     }
 }
 
 #Preview {
     YourTripsView()
+        .environmentObject(TripManager())
 }
+

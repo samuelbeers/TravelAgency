@@ -18,6 +18,8 @@ struct TripBuilderView: View {
     @State var showWeb: Bool = false
     @State var urlString: String = ""
     @State var savedTrip: TripData? = nil
+        
+    @EnvironmentObject var tripManager: TripManager
     
     let locations = ["New York", "Los Angeles", "Chicago", "San Francisco", "Miami"]
     
@@ -75,8 +77,34 @@ struct TripBuilderView: View {
                         Text("Total Duration: \(trip.totalTime)")
                     }
                     .padding()
+                    
+                    HStack {
+                        Button("No") {
+                            showWeb = true
+                            savedTrip = nil
+                        }
+                        .foregroundColor(.red)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(8)
+                        
+                        NavigationLink(destination: YourTripsView()) {
+                            Button("Yes") {
+                                if let trip = savedTrip {
+                                    tripManager.trips.append(trip)
+                                    savedTrip = nil
+                                }
+                            }
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.green)
+                            .cornerRadius(8)
+                        }
+                    }
+                    .padding()
                 }
-
                 
                 Spacer()
             }
@@ -105,4 +133,5 @@ struct TripBuilderView: View {
 
 #Preview {
     TripBuilderView()
+        .environmentObject(TripManager())
 }

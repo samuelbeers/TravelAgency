@@ -13,6 +13,7 @@ struct TravelAgencyApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(BusinessModel())
+                .environmentObject(TripManager())
         }
     }
 }
