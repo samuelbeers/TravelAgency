@@ -12,6 +12,7 @@ struct TravelAgencyApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(BusinessModel())
         }
     }
 }

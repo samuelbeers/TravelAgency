@@ -1,11 +1,23 @@
 import SwiftUI
 
+
+struct TripData: Codable {
+    var startingLocation: String
+    var destination: String
+    var price: String
+    var startTime: String
+    var endTime: String
+    var totalTime: String
+}
+
+
+
 struct TripBuilderView: View {
     @State var startingLocation: String = ""
     @State var destination: String = ""
     @State var showWeb: Bool = false
     @State var urlString: String = ""
-    @State var savedtrip: String? = nil
+    @State var savedTrip: TripData? = nil
     
     let locations = ["New York", "Los Angeles", "Chicago", "San Francisco", "Miami"]
     
@@ -51,13 +63,32 @@ struct TripBuilderView: View {
                         .padding()
                 }
                 
+                if let trip = savedTrip {
+                    VStack(alignment: .leading) {
+                        Text("Saved Trip:")
+                            .font(.headline)
+                        Text("From: \(trip.startingLocation)")
+                        Text("To: \(trip.destination)")
+                        Text("Price: \(trip.price)")
+                        Text("Start Time: \(trip.startTime)")
+                        Text("End Time: \(trip.endTime)")
+                        Text("Total Duration: \(trip.totalTime)")
+                    }
+                    .padding()
+                }
+
+                
                 Spacer()
             }
             .navigationTitle("Trip Builder")
             .padding()
             .sheet(isPresented: $showWeb) {
-                WebView(urlString: $urlString) {
-                    savedtrip = "Trip Selected"
+                WebView(
+                    urlString: $urlString,
+                    startingLocation: startingLocation,
+                    destination: destination
+                ) { tripData in
+                    savedTrip = tripData
                     showWeb = false
                 }
             }
