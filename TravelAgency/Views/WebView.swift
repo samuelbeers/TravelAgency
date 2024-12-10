@@ -31,6 +31,11 @@ struct WebView: UIViewRepresentable {
                 let startTime = 'Unknown';
                 let endTime = 'Unknown';
                 let totalTime = 'Unknown';
+        
+                const dateDiv = document.querySelector('div[aria-label="Travel date"]');
+                console.log(dateDiv);
+                const dateButton = dateDiv ? dateDiv.querySelector('button') : null;
+                const date = dateButton ? dateButton.textContent : 'Unknown';
 
                 if (detailsDiv) {
                     const timeElements = detailsDiv.querySelectorAll('time');
@@ -45,7 +50,8 @@ struct WebView: UIViewRepresentable {
                     price: price,
                     startTime: startTime,
                     endTime: endTime,
-                    totalTime: totalTime
+                    totalTime: totalTime,
+                    date: date
                 };
                 window.webkit.messageHandlers.buttonClicked.postMessage(JSON.stringify(tripData));
             }
@@ -94,7 +100,8 @@ struct WebView: UIViewRepresentable {
                     price: tripDetails["price"] ?? "Unknown",
                     startTime: tripDetails["startTime"] ?? "Unknown",
                     endTime: tripDetails["endTime"] ?? "Unknown",
-                    totalTime: tripDetails["totalTime"] ?? "Unknown"
+                    totalTime: tripDetails["totalTime"] ?? "Unknown",
+                    date: tripDetails["date"] ?? "Unknown"
                 )
                 
                 parent.onTripSelected?(trip)

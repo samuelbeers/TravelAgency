@@ -8,6 +8,7 @@ struct TripData: Codable {
     var startTime: String
     var endTime: String
     var totalTime: String
+    var date: String
 }
 
 
@@ -18,6 +19,7 @@ struct TripBuilderView: View {
     @State var showWeb: Bool = false
     @State var urlString: String = ""
     @State var savedTrip: TripData? = nil
+    @State var navigateToYourTrips: Bool = false
         
     @EnvironmentObject var tripManager: TripManager
     
@@ -75,6 +77,7 @@ struct TripBuilderView: View {
                         Text("Start Time: \(trip.startTime)")
                         Text("End Time: \(trip.endTime)")
                         Text("Total Duration: \(trip.totalTime)")
+                        Text("Date: \(trip.date)")
                     }
                     .padding()
                     
@@ -89,24 +92,27 @@ struct TripBuilderView: View {
                         .background(Color.gray.opacity(0.2))
                         .cornerRadius(8)
                         
-                        NavigationLink(destination: YourTripsView()) {
-                            Button("Yes") {
-                                if let trip = savedTrip {
-                                    tripManager.trips.append(trip)
-                                    savedTrip = nil
-                                }
+                        Button("Yes") {
+                            if let trip = savedTrip {
+                                tripManager.trips.append(trip)
+                                savedTrip = nil
+                                navigateToYourTrips = true
                             }
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.green)
-                            .cornerRadius(8)
                         }
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.green)
+                        .cornerRadius(8)
                     }
                     .padding()
                 }
                 
                 Spacer()
+                NavigationLink(
+                    destination: YourTripsView(),
+                    isActive: $navigateToYourTrips
+                ) { EmptyView() }
             }
             .navigationTitle("Trip Builder")
             .padding()
