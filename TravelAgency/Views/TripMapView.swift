@@ -55,11 +55,17 @@ struct TripMapView: View {
                 directions.calculate { response, error in
                     if let route = response?.routes.first {
                         self.routePolyline = route.polyline
-                        self.region = MKCoordinateRegion(route.polyline.boundingMapRect)
+                        var region = MKCoordinateRegion(route.polyline.boundingMapRect)
+                        
+                        let zoomAdjustment: CLLocationDegrees = 1.4
+                        region.span.latitudeDelta += zoomAdjustment
+                        region.span.longitudeDelta += zoomAdjustment
+
+                        self.region = region
 
                         self.annotations = [
-                            MapAnnotationItem(coordinate: startPlacemark.location!.coordinate, title: "Start"),
-                            MapAnnotationItem(coordinate: endPlacemark.location!.coordinate, title: "End")
+                            MapAnnotationItem(coordinate: startPlacemark.location!.coordinate, title: "Start", imageName: "airplane"),
+                            MapAnnotationItem(coordinate: endPlacemark.location!.coordinate, title: "End", imageName: "house.fill")
                         ]
                     }
                 }
@@ -72,6 +78,7 @@ struct MapAnnotationItem: Identifiable {
     let id = UUID()
     let coordinate: CLLocationCoordinate2D
     let title: String
+    let imageName: String
 }
 
 struct CustomMapView: UIViewRepresentable {
@@ -96,9 +103,7 @@ struct CustomMapView: UIViewRepresentable {
         uiView.setRegion(region, animated: true)
 
         for annotation in annotations {
-            let mapAnnotation = MKPointAnnotation()
-            mapAnnotation.coordinate = annotation.coordinate
-            mapAnnotation.title = annotation.title
+            let mapAnnotation = CustomMapAnnotation(coordinate: annotation.coordinate, title: annotation.title, imageName: annotation.imageName)
             uiView.addAnnotation(mapAnnotation)
         }
 
@@ -113,11 +118,11 @@ struct CustomMapView: UIViewRepresentable {
 
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: CustomMapView
-
+        
         init(_ parent: CustomMapView) {
             self.parent = parent
         }
-
+        
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             if let polyline = overlay as? MKPolyline {
                 let renderer = MKPolylineRenderer(polyline: polyline)
@@ -127,13 +132,45 @@ struct CustomMapView: UIViewRepresentable {
             }
             return MKOverlayRenderer(overlay: overlay)
         }
+        
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            guard let customAnnotation = annotation as? CustomMapAnnotation else { return nil }
+            
+            let identifier = "customAnnotation"
+            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+            
+            if annotationView == nil {
+                annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+                annotationView?.canShowCallout = true
+            } else {
+                annotationView?.annotation = annotation
+            }
+            
+            // Set the image based on the imageName
+            annotationView?.image = UIImage(systemName: customAnnotation.imageName)
+            
+            return annotationView
+        }
+    }
+}
+
+class CustomMapAnnotation: NSObject, MKAnnotation {
+    let coordinate: CLLocationCoordinate2D
+    let title: String?
+    let imageName: String
+
+    init(coordinate: CLLocationCoordinate2D, title: String?, imageName: String) {
+        self.coordinate = coordinate
+        self.title = title
+        self.imageName = imageName
+        super.init()
     }
 }
 
 #if DEBUG
 struct TripMapView_Previews: PreviewProvider {
     static var previews: some View {
-        TripMapView(startingLocation: "New York, NY", destination: "Los Angeles, CA")
+        TripMapView(startingLocation: "New York, NY", destination: "Miami")
     }
 }
 #endif
