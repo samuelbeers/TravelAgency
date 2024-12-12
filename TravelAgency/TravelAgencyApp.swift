@@ -14,6 +14,7 @@ struct TravelAgencyApp: App {
             ContentView()
                 .environmentObject(BusinessModel())
                 .environmentObject(TripManager())
+                .environmentObject(DatabaseManager())
         }
     }
 }

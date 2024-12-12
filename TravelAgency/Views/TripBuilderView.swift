@@ -108,10 +108,11 @@ struct TripBuilderView: View {
                     urlString: $urlString,
                     startingLocation: startingLocation,
                     destination: destination
-                ) { tripData in
+                ){ tripData in
                     savedTrip = tripData
                     showWeb = false
                 }
+                .environmentObject(DatabaseManager())
             }
         }
     }

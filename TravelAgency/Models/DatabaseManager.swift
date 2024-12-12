@@ -9,7 +9,7 @@ import SwiftUI
 import SQLite
 
 struct TripData: Codable, Identifiable {
-    var id: UUID
+    var id: Int
     var startingLocation: String
     var destination: String
     var price: String
@@ -21,7 +21,7 @@ struct TripData: Codable, Identifiable {
 
 class DatabaseManager: ObservableObject {
     private var db: Connection?
-    private var tripTable : SQLite.Table?
+    private var trip_table : SQLite.Table?
     
     @Published var trips = [TripData]()
     
@@ -62,8 +62,8 @@ class DatabaseManager: ObservableObject {
             let total_time = SQLite.Expression<String>("total_time")
             let date = SQLite.Expression<String>("date")
             
-            tripTable = Table("trip")
-            try db?.run(tripTable!.create(ifNotExists: true) { table in
+            trip_table = Table("trip")
+            try db?.run(trip_table!.create(ifNotExists: true) { table in
                 table.column(trip_id, primaryKey: .autoincrement)
                 table.column(starting_location)
                 table.column(destination)
@@ -83,8 +83,8 @@ class DatabaseManager: ObservableObject {
     
     func dropTables(){
         do{
-            if tripTable != nil{
-                try db?.run(tripTable!.drop(ifExists: true))
+            if trip_table != nil{
+                try db?.run(trip_table!.drop(ifExists: true))
             }
             print("Succeed to drop table")
         }catch{
@@ -102,7 +102,7 @@ class DatabaseManager: ObservableObject {
         in_date: String
     ) {
         do {
-            if tripTable != nil{
+            if trip_table != nil{
                 let starting_location = SQLite.Expression<String>("starting_location")
                 let destination = SQLite.Expression<String>("destination")
                 let price = SQLite.Expression<String>("price")
@@ -111,7 +111,7 @@ class DatabaseManager: ObservableObject {
                 let total_time = SQLite.Expression<String>("total_time")
                 let date = SQLite.Expression<String>("date")
 
-                try db?.run(tripTable!.insert(
+                try db?.run(trip_table!.insert(
                     starting_location <- in_startingLocation,
                     destination <- in_destination,
                     price <- in_price,
@@ -128,27 +128,27 @@ class DatabaseManager: ObservableObject {
         }
     }
     
-    func fetchTrip() -> [TripData] {
+    func fetchTrips() -> [TripData] {
         var trips: [TripData] = []
         do {
-            guard let tripTable = tripTable else { return [] }
-            let tripId = SQLite.Expression<Int>("id")
-            let startingLocation = SQLite.Expression<String>("starting_location")
+            guard let trip_table = trip_table else { return [] }
+            let trip_id = SQLite.Expression<Int>("id")
+            let starting_location = SQLite.Expression<String>("starting_location")
             let destination = SQLite.Expression<String>("destination")
             let price = SQLite.Expression<String>("price")
-            let startTime = SQLite.Expression<String>("start_time")
-            let endTime = SQLite.Expression<String>("end_time")
-            let totalTime = SQLite.Expression<String>("total_time")
+            let start_time = SQLite.Expression<String>("start_time")
+            let end_time = SQLite.Expression<String>("end_time")
+            let total_time = SQLite.Expression<String>("total_time")
             let date = SQLite.Expression<String>("date")
-            for row in try db!.prepare(tripTable) {
+            for row in try db!.prepare(trip_table) {
                 let trip = TripData(
-                    id: row[tripId],
-                    startingLocation: row[startingLocation],
+                    id: row[trip_id],
+                    startingLocation: row[starting_location],
                     destination: row[destination],
                     price: row[price],
-                    startTime: row[startTime],
-                    endTime: row[endTime],
-                    totalTime: row[totalTime],
+                    startTime: row[start_time],
+                    endTime: row[end_time],
+                    totalTime: row[total_time],
                     date: row[date]
                 )
                 trips.append(trip)
@@ -160,11 +160,41 @@ class DatabaseManager: ObservableObject {
         }
         return trips
     }
+    
+    func fetchLastInsertedTrip() -> TripData? {
+        guard let trip_table = trip_table else { return nil }
+        do {
+            let trip_id = SQLite.Expression<Int>("id")
+            let starting_location = SQLite.Expression<String>("starting_location")
+            let destination = SQLite.Expression<String>("destination")
+            let price = SQLite.Expression<String>("price")
+            let start_time = SQLite.Expression<String>("start_time")
+            let end_time = SQLite.Expression<String>("end_time")
+            let total_time = SQLite.Expression<String>("total_time")
+            let date = SQLite.Expression<String>("date")
+            if let lastRow = try db!.pluck(trip_table.filter(trip_id == Int(db!.lastInsertRowid))) {
+                return TripData(
+                    id: lastRow[trip_id],
+                    startingLocation: lastRow[starting_location],
+                    destination: lastRow[destination],
+                    price: lastRow[price],
+                    startTime: lastRow[start_time],
+                    endTime: lastRow[end_time],
+                    totalTime: lastRow[total_time],
+                    date: lastRow[date]
+                )
+            }
+        } catch {
+            print("Error fetching the last trip: \(error)")
+        }
+        
+        return nil
+    }
 
     
     func deleteTrip(id: Int) {
         do {
-            guard let tripTable = tripTable else { return }
+            guard let tripTable = trip_table else { return }
             let tripId = SQLite.Expression<Int>("id")
             let tripToDelete = tripTable.filter(tripId == id)
             try db?.run(tripToDelete.delete())

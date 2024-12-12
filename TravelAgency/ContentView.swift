@@ -37,4 +37,5 @@ struct ContentView: View {
     ContentView()
         .environmentObject(BusinessModel())
         .environmentObject(TripManager())
+        .environmentObject(DatabaseManager())
 }

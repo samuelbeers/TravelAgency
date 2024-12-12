@@ -10,8 +10,9 @@ import WebKit
 
 struct WebView: UIViewRepresentable {
     @Binding var urlString: String
+    @EnvironmentObject var databaseManager: DatabaseManager
     var startingLocation: String
-        var destination: String
+    var destination: String
     var onTripSelected: ((TripData) -> Void)?
     
     func makeUIView(context: Context) -> WKWebView {
@@ -94,18 +95,18 @@ struct WebView: UIViewRepresentable {
                let data = body.data(using: .utf8),
                let tripDetails = try? JSONDecoder().decode([String: String].self, from: data) {
                 
-                let trip = TripData(
-                    id: UUID(),
-                    startingLocation: startingLocation,
-                    destination: destination,
-                    price: tripDetails["price"] ?? "Unknown",
-                    startTime: tripDetails["startTime"] ?? "Unknown",
-                    endTime: tripDetails["endTime"] ?? "Unknown",
-                    totalTime: tripDetails["totalTime"] ?? "Unknown",
-                    date: tripDetails["date"] ?? "Unknown"
+               databaseManager.addTrip(
+                    in_startingLocation: startingLocation,
+                    in_destination: destination,
+                    in_price: tripDetails["price"] ?? "Unknown",
+                    in_startTime: tripDetails["startTime"] ?? "Unknown",
+                    in_endTime: tripDetails["endTime"] ?? "Unknown",
+                    in_totalTime: tripDetails["totalTime"] ?? "Unknown",
+                    in_date: tripDetails["date"] ?? "Unknown"
                 )
-                
-                parent.onTripSelected?(trip)
+                if let trip = databaseManager.fetchLastInsertedTrip() {
+                    parent.onTripSelected?(trip)
+                }
             }
         }
     }
