@@ -1,18 +1,5 @@
 import SwiftUI
 
-
-struct TripData: Codable {
-    var startingLocation: String
-    var destination: String
-    var price: String
-    var startTime: String
-    var endTime: String
-    var totalTime: String
-    var date: String
-}
-
-
-
 struct TripBuilderView: View {
     @State var startingLocation: String = ""
     @State var destination: String = ""
