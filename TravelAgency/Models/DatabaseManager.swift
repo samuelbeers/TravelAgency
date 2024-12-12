@@ -121,10 +121,56 @@ class DatabaseManager: ObservableObject {
                     date <- in_date
                 ))
 
-                print("Employee added")
+                print("Trip added")
             }
         } catch {
-            print("Failed to add employee: \(error)")
+            print("Failed to add trip: \(error)")
+        }
+    }
+    
+    func fetchTrip() -> [TripData] {
+        var trips: [TripData] = []
+        do {
+            guard let tripTable = tripTable else { return [] }
+            let tripId = SQLite.Expression<Int>("id")
+            let startingLocation = SQLite.Expression<String>("starting_location")
+            let destination = SQLite.Expression<String>("destination")
+            let price = SQLite.Expression<String>("price")
+            let startTime = SQLite.Expression<String>("start_time")
+            let endTime = SQLite.Expression<String>("end_time")
+            let totalTime = SQLite.Expression<String>("total_time")
+            let date = SQLite.Expression<String>("date")
+            for row in try db!.prepare(tripTable) {
+                let trip = TripData(
+                    id: row[tripId],
+                    startingLocation: row[startingLocation],
+                    destination: row[destination],
+                    price: row[price],
+                    startTime: row[startTime],
+                    endTime: row[endTime],
+                    totalTime: row[totalTime],
+                    date: row[date]
+                )
+                trips.append(trip)
+            }
+            self.trips = trips
+            print("\(trips.count) trips fetched")
+        } catch {
+            print("Failed to fetch trips: \(error)")
+        }
+        return trips
+    }
+
+    
+    func deleteTrip(id: Int) {
+        do {
+            guard let tripTable = tripTable else { return }
+            let tripId = SQLite.Expression<Int>("id")
+            let tripToDelete = tripTable.filter(tripId == id)
+            try db?.run(tripToDelete.delete())
+            print("Trip deleted")
+        } catch {
+            print("Failed to delete trip: \(error)")
         }
     }
 }
