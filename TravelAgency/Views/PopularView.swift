@@ -12,10 +12,10 @@ struct PopularView: View {
     
     var body: some View {
         NavigationView {
-            List(BM.testLocations, id: \.name) { location in
-                NavigationLink(destination: LocationView(location: location)) {
+            List(BM.cities, id: \.name) { city in
+                NavigationLink(destination: LocationView(location: Location(name: city.name, coords: Coordinate(latitude: city.latitude, longitude: city.longitude)))) {
                     VStack(alignment: .leading) {
-                        Text(location.name)
+                        Text(city.name)
                             .font(.largeTitle)
                     }
                     .padding(.vertical, 5)

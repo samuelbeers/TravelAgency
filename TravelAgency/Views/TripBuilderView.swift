@@ -7,15 +7,15 @@ struct TripBuilderView: View {
     @State var urlString: String = ""
     @State var savedTrip: TripData? = nil
     @State var navigateToYourTrips: Bool = false
-        
     @EnvironmentObject var tripManager: TripManager
-    
-    let locations = ["New York", "Los Angeles", "Chicago", "San Francisco", "Miami"]
+    var cities: [City]
+    var locations: [String] {
+        cities.map { $0.name }
+    }
     
     var body: some View {
         NavigationView {
             VStack {
-                
                 Picker("Starting Location", selection: $startingLocation) {
                     ForEach(locations, id: \.self) { location in
                         Text(location)
@@ -126,6 +126,10 @@ struct TripBuilderView: View {
 }
 
 #Preview {
-    TripBuilderView()
+    TripBuilderView(cities: [City(name: "New York", latitude: 40.730610, longitude: -73.935242, country: "US", population: 3592294, region: "California", is_capital: false),
+                             City(name: "Los Angeles", latitude: 34.052235, longitude: -118.243683, country: "US", population: 3980400, region: "California", is_capital: false),
+                             City(name: "Chicago", latitude: 41.881832, longitude: -87.623177, country: "US", population: 2695598, region: "Illinois", is_capital: false),
+                             City(name: "San Francisco", latitude: 37.773972, longitude: -122.431297, country: "US", population: 870887, region: "California", is_capital: false),
+                             City(name: "Miami", latitude: 25.793449, longitude: -80.139198, country: "US", population: 470914, region: "Florida", is_capital: false)])
         .environmentObject(TripManager(databaseManager: DatabaseManager()))
 }
