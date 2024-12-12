@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct YourTripsView: View {
-    @EnvironmentObject var tripManager: TripManager
+    @ObservedObject var tripManager: TripManager = TripManager(databaseManager: DatabaseManager())
     
     var body: some View {
         NavigationView {
@@ -110,9 +110,9 @@ struct TripCountdownView: View {
 }
 
 
-#Preview {
-    YourTripsView()
-        .environmentObject(TripManager(databaseManager: DatabaseManager()))
-}
+//#Preview {
+//    YourTripsView()
+//        .environmentObject(TripManager(databaseManager: DatabaseManager()))
+//}
 
 

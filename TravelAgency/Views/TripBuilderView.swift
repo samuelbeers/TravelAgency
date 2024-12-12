@@ -8,7 +8,7 @@ struct TripBuilderView: View {
     @State var savedTrip: TripData? = nil
     @State var navigateToYourTrips: Bool = false
         
-    @ObservedObject var tripManager: TripManager
+    @ObservedObject var tripManager: TripManager = TripManager(databaseManager: DatabaseManager())
     
     let locations = ["New York", "Los Angeles", "Chicago", "San Francisco", "Miami"]
     
