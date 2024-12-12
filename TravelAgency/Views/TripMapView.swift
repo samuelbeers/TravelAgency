@@ -42,6 +42,9 @@ struct TripMapView: View {
             // geocode destination
             geocoder.geocodeAddressString(destination) { (endPlacemarks, error) in
                 guard let endPlacemark = endPlacemarks?.first else { return }
+                
+                let startCoordinate = startPlacemark.location!.coordinate
+                let endCoordinate = endPlacemark.location!.coordinate
 
                 let startMapItem = MKMapItem(placemark: MKPlacemark(placemark: startPlacemark))
                 let endMapItem = MKMapItem(placemark: MKPlacemark(placemark: endPlacemark))
@@ -57,22 +60,42 @@ struct TripMapView: View {
                         self.routePolyline = route.polyline
                         var region = MKCoordinateRegion(route.polyline.boundingMapRect)
                         
-                        let zoomAdjustment: CLLocationDegrees = 1.4
+                        let zoomAdjustment: CLLocationDegrees = 2.0
                         region.span.latitudeDelta += zoomAdjustment
                         region.span.longitudeDelta += zoomAdjustment
 
                         self.region = region
 
-                        self.annotations = [
-                            MapAnnotationItem(coordinate: startPlacemark.location!.coordinate, title: "Start", imageName: "airplane"),
-                            MapAnnotationItem(coordinate: endPlacemark.location!.coordinate, title: "End", imageName: "house.fill")
-                        ]
+                        
+                    } else {
+                        self.drawStraightLineFallback(start: startCoordinate, end: endCoordinate)
                     }
+                    
+                    self.annotations = [
+                        MapAnnotationItem(coordinate: startPlacemark.location!.coordinate, title: "Start", imageName: "airplane"),
+                        MapAnnotationItem(coordinate: endPlacemark.location!.coordinate, title: "End", imageName: "house.fill")
+                    ]
                 }
             }
         }
     }
+    func drawStraightLineFallback(start: CLLocationCoordinate2D, end: CLLocationCoordinate2D) {
+        let coordinates = [start, end]
+        let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+
+        self.routePolyline = polyline
+
+        let boundingRect = polyline.boundingMapRect
+        var region = MKCoordinateRegion(boundingRect)
+        let zoomAdjustment: CLLocationDegrees = 1.4
+        region.span.latitudeDelta += zoomAdjustment
+        region.span.longitudeDelta += zoomAdjustment
+
+        self.region = region
+    }
 }
+
+
 
 struct MapAnnotationItem: Identifiable {
     let id = UUID()
@@ -170,7 +193,7 @@ class CustomMapAnnotation: NSObject, MKAnnotation {
 #if DEBUG
 struct TripMapView_Previews: PreviewProvider {
     static var previews: some View {
-        TripMapView(startingLocation: "New York, NY", destination: "Miami")
+        TripMapView(startingLocation: "New York, NY", destination: "Moscow")
     }
 }
 #endif
