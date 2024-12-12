@@ -15,7 +15,6 @@ struct TripBuilderView: View {
     var body: some View {
         NavigationView {
             VStack {
-                
                 Picker("Starting Location", selection: $startingLocation) {
                     ForEach(locations, id: \.self) { location in
                         Text(location)
@@ -125,7 +124,9 @@ struct TripBuilderView: View {
     }
 }
 
+
 //#Preview {
 //    TripBuilderView()
 //        .environmentObject(TripManager(databaseManager: DatabaseManager()))
 //}
+
