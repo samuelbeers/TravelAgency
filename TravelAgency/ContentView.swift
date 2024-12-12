@@ -36,6 +36,6 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(BusinessModel())
-        .environmentObject(TripManager())
+        .environmentObject(TripManager(databaseManager: DatabaseManager()))
         .environmentObject(DatabaseManager())
 }

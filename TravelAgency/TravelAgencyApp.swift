@@ -9,12 +9,14 @@ import SwiftUI
 
 @main
 struct TravelAgencyApp: App {
+    @StateObject private var databaseManager = DatabaseManager()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(BusinessModel())
-                .environmentObject(TripManager())
-                .environmentObject(DatabaseManager())
+                .environmentObject(TripManager(databaseManager: databaseManager))
+                .environmentObject(databaseManager)
         }
     }
 }

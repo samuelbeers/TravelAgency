@@ -112,7 +112,7 @@ struct TripCountdownView: View {
 
 #Preview {
     YourTripsView()
-        .environmentObject(TripManager())
+        .environmentObject(TripManager(databaseManager: DatabaseManager()))
 }
 
 

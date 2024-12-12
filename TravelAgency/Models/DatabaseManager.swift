@@ -191,7 +191,6 @@ class DatabaseManager: ObservableObject {
         return nil
     }
 
-    
     func deleteTrip(id: Int) {
         do {
             guard let tripTable = trip_table else { return }

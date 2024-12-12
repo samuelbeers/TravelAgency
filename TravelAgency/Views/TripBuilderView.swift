@@ -127,5 +127,5 @@ struct TripBuilderView: View {
 
 #Preview {
     TripBuilderView()
-        .environmentObject(TripManager())
+        .environmentObject(TripManager(databaseManager: DatabaseManager()))
 }
