@@ -11,7 +11,7 @@ struct ContentView: View {
     var body: some View {
         TabView {
             
-            TripBuilderView()
+            TripBuilderView(tripManager: TripManager(databaseManager: DatabaseManager()))
                 .tabItem {
                     Image(systemName: "airplane")
                     Text("Trip Builder")
