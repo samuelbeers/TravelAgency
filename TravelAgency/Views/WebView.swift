@@ -95,6 +95,7 @@ struct WebView: UIViewRepresentable {
                let tripDetails = try? JSONDecoder().decode([String: String].self, from: data) {
                 
                 let trip = TripData(
+                    id: UUID(),
                     startingLocation: startingLocation,
                     destination: destination,
                     price: tripDetails["price"] ?? "Unknown",

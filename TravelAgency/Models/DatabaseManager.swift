@@ -9,7 +9,7 @@ import SwiftUI
 import SQLite
 
 struct TripData: Codable, Identifiable {
-    var id: Int
+    var id: UUID
     var startingLocation: String
     var destination: String
     var price: String
