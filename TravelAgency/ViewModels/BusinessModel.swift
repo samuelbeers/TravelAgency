@@ -20,7 +20,7 @@ class BusinessModel : NSObject, CLLocationManagerDelegate, ObservableObject {
     override init(){
         super.init()
         locationManager.delegate = self
-        fetchCities() // Fetch cities when initializing
+        fetchCities()
     }
     
     func fetchCities() {

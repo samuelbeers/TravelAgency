@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct City : Decodable, Identifiable {
+struct City: Decodable, Identifiable {
     var id: UUID
     var name: String
     var latitude: Double
@@ -28,31 +28,29 @@ struct City : Decodable, Identifiable {
     }
 }
 
-struct NinjaResponse : Decodable {
+struct NinjaResponse: Decodable {
     var cities: [City]
 }
 
 class NinjaDataService {
-    func getCities(minPopulation: Int = 1000000) async -> [City] {
-        let url = URL(string: "https://api.api-ninjas.com/v1/city?min_population=\(minPopulation)&limit=30")!
+    func getCities(minPopulation: Int = 1000000, limit: Int = 30) async -> [City] {
+        let url = URL(string: "https://api.api-ninjas.com/v1/city?min_population=\(minPopulation)&limit=\(limit)")!
         var request = URLRequest(url: url)
-        request.setValue("\(Utility.NINJA_API_KEY)", forHTTPHeaderField: "X-Api-Key")
-        request.httpMethod = "GET"
+        request.setValue("YOUR_NINJA_API_KEY", forHTTPHeaderField: "X-Api-Key")
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            if let httpResponse = response as? HTTPURLResponse {
-                if httpResponse.statusCode == 200 {
-                    let ninjaResponse = try JSONDecoder().decode(NinjaResponse.self, from: data)
-                    print("succeed \(ninjaResponse.cities.count) received")
-                    return ninjaResponse.cities
-                } else {
-                    print("return statusCode \(httpResponse.statusCode)")
-                }
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                let cities = try JSONDecoder().decode([City].self, from: data)
+                print("Successfully retrieved \(cities.count) cities")
+                return cities
+            } else {
+                print("Error: Received status code \(response)")
             }
         } catch {
-            print(error)
+            print("Request failed with error: \(error)")
         }
-        return [City]()
+        
+        return []
     }
 }

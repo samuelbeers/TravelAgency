@@ -99,13 +99,13 @@ struct WebView: UIViewRepresentable {
                let tripDetails = try? JSONDecoder().decode([String: String].self, from: data) {
                 
                databaseManager.addTrip(
-                    in_startingLocation: startingLocation,
-                    in_destination: destination,
-                    in_price: tripDetails["price"] ?? "Unknown",
-                    in_startTime: tripDetails["startTime"] ?? "Unknown",
-                    in_endTime: tripDetails["endTime"] ?? "Unknown",
-                    in_totalTime: tripDetails["totalTime"] ?? "Unknown",
-                    in_date: tripDetails["date"] ?? "Unknown"
+                    inStartingLocation: startingLocation,
+                    inDestination: destination,
+                    inPrice: tripDetails["price"] ?? "Unknown",
+                    inStartTime: tripDetails["startTime"] ?? "Unknown",
+                    inEndTime: tripDetails["endTime"] ?? "Unknown",
+                    inTotalTime: tripDetails["totalTime"] ?? "Unknown",
+                    inDate: tripDetails["date"] ?? "Unknown"
                 )
                 if let trip = databaseManager.fetchLastInsertedTrip() {
                     parent.onTripSelected?(trip)

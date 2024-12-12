@@ -9,8 +9,15 @@ struct TripBuilderView: View {
     @State var navigateToYourTrips: Bool = false
         
     @ObservedObject var tripManager: TripManager = TripManager(databaseManager: DatabaseManager())
+    @EnvironmentObject var businessModel: BusinessModel
     
-    let locations = ["New York", "Los Angeles", "Chicago", "San Francisco", "Miami"]
+    var cities: [City] {
+            businessModel.cities
+    }
+        
+    var locations: [String] {
+            cities.map { $0.name }
+    }
     
     var body: some View {
         NavigationView {

@@ -14,11 +14,9 @@ class TripManager: ObservableObject {
 
     init(databaseManager: DatabaseManager) {
         self.databaseManager = databaseManager
-        fetchTrips()
-    }
-
-    private func fetchTrips() {
-        trips = databaseManager.fetchTrips()
+        self.databaseManager.$trips
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$trips)
     }
 }
 
