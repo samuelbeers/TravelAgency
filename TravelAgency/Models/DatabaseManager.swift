@@ -153,8 +153,10 @@ class DatabaseManager: ObservableObject {
                 )
                 trips.append(trip)
             }
-            self.trips = trips
-            print("\(trips.count) trips fetched")
+            DispatchQueue.main.async {
+                self.trips = trips
+                print("\(trips.count) trips fetched")
+            }
         } catch {
             print("Failed to fetch trips: \(error)")
         }
