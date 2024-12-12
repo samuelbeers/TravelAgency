@@ -75,19 +75,22 @@ struct WebView: UIViewRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(self, startingLocation: startingLocation, destination: destination)
+        Coordinator(self, startingLocation: startingLocation, destination: destination, databaseManager: databaseManager)
     }
 
     
     class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
         var parent: WebView
+        var databaseManager: DatabaseManager
         var startingLocation: String
         var destination: String
         
-        init(_ parent: WebView, startingLocation: String, destination: String) {
+        
+        init(_ parent: WebView, startingLocation: String, destination: String, databaseManager: DatabaseManager) {
             self.parent = parent
             self.startingLocation = startingLocation
             self.destination = destination
+            self.databaseManager = databaseManager
         }
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
