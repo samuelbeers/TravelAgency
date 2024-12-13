@@ -31,6 +31,9 @@ struct YourTripsView: View {
             }
             .navigationTitle("Your Trips")
         }
+        .onAppear() {
+            tripManager.databaseManager.fetchTrips()
+        }
     }
     
     func deleteTrip(at offsets: IndexSet) {
