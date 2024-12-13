@@ -10,7 +10,7 @@ import Foundation
 
 class TripManager: ObservableObject {
     @Published var trips: [TripData] = []
-    private var databaseManager: DatabaseManager
+    var databaseManager: DatabaseManager
 
     init(databaseManager: DatabaseManager) {
         self.databaseManager = databaseManager

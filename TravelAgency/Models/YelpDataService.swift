@@ -63,7 +63,7 @@ class YelpDataService {
             URLQueryItem(name: "latitude", value: String(lat)),
             URLQueryItem(name: "longitude", value: String(long)),
             URLQueryItem(name: "categories", value: category),
-            URLQueryItem(name: "limit", value: "10"),
+            URLQueryItem(name: "limit", value: "25"),
             URLQueryItem(name: "radius", value: "2000")
         ]
         if let url = urlComponent?.url{

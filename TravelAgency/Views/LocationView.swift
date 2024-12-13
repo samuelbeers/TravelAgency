@@ -11,6 +11,7 @@ import CoreLocation
 struct LocationView: View {
     @EnvironmentObject var BM: BusinessModel
     var location: Location
+    @State private var showingWebsiteSheet = false
     
     var body: some View {
         VStack {
@@ -23,15 +24,28 @@ struct LocationView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 5)
             List(BM.businesses) { business in
-                VStack(alignment: .leading) {
-                    Text(business.name ?? "Unknown")
-                        .font(.headline)
-                        .padding(.bottom, 5)
-                    StarRatingView(rating: business.rating ?? 0.0)
+                Button(action: {
+                    BM.selectBusiness(business)
+                    showingWebsiteSheet.toggle()
+                }) {
+                    VStack(alignment: .leading) {
+                        Text(business.name ?? "Unknown")
+                            .font(.headline)
+                            .padding(.bottom, 5)
+                            .foregroundStyle(.black)
+                        StarRatingView(rating: business.rating ?? 0.0)
+                    }
+                    .padding(.vertical, 5)
                 }
-                .padding(.vertical, 5)
             }
         }
+        .sheet(isPresented: $showingWebsiteSheet, content: {
+            if let business = BM.selectedBusiness, let url = business.url {
+                LocationWebView(urlString: url)
+            } else {
+                LocationWebView(urlString: "https://www.google.com")
+            }
+        })
         .onAppear {
             BM.getBusiness(
                 category: "Food",
@@ -40,6 +54,7 @@ struct LocationView: View {
         }
     }
 }
+
 
 struct StarRatingView: View {
     let rating: Double

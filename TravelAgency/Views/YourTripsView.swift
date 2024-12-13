@@ -12,24 +12,36 @@ struct YourTripsView: View {
     
     var body: some View {
         NavigationView {
-            List(tripManager.trips) { trip in
-                NavigationLink(destination: TripMapView(startingLocation: trip.startingLocation, destination: trip.destination)) {
-                    VStack(alignment: .leading) {
-                        Text("From: \(trip.startingLocation)")
-                            .font(.headline)
-                        Text("To: \(trip.destination)")
-                        Text("Price: \(trip.price)")
-                        Text("Duration: \(trip.totalTime)")
-                        
-                        TripCountdownView(date: trip.date, time: trip.startTime)
+            List {
+                ForEach(tripManager.trips) { trip in
+                    NavigationLink(destination: TripMapView(startingLocation: trip.startingLocation, destination: trip.destination)) {
+                        VStack(alignment: .leading) {
+                            Text("From: \(trip.startingLocation)")
+                                .font(.headline)
+                            Text("To: \(trip.destination)")
+                            Text("Price: \(trip.price)")
+                            Text("Duration: \(trip.totalTime)")
+                            
+                            TripCountdownView(date: trip.date, time: trip.startTime)
+                        }
+                        .padding()
                     }
-                    .padding()
                 }
+                .onDelete(perform: deleteTrip)
             }
             .navigationTitle("Your Trips")
         }
     }
+    
+    func deleteTrip(at offsets: IndexSet) {
+        for index in offsets {
+            let trip = tripManager.trips[index]
+            tripManager.databaseManager.deleteTrip(id: trip.id)
+        }
+        tripManager.databaseManager.fetchTrips()
+    }
 }
+
 
 struct TripCountdownView: View {
     let date: String
@@ -39,7 +51,7 @@ struct TripCountdownView: View {
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        Text("Time until trip: \(countdown)")
+        Text("Time until trip: \n\(countdown)")
             .onAppear(perform: updateCountdown)
             .onReceive(timer) { _ in
                 updateCountdown()
@@ -99,13 +111,13 @@ struct TripCountdownView: View {
         }
     }
 
-    
     func formatTimeInterval(_ interval: TimeInterval) -> String {
-        let hours = Int(interval) / 3600
+        let days = Int(interval) / 86400
+        let hours = (Int(interval) % 86400) / 3600
         let minutes = (Int(interval) % 3600) / 60
         let seconds = Int(interval) % 60
         
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        return String(format: "%d days %02d:%02d:%02d", days, hours, minutes, seconds)
     }
 }
 
