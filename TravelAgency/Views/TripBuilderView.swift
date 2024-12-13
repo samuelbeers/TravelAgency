@@ -7,7 +7,23 @@ struct TripBuilderView: View {
     @State var urlString: String = ""
     @State var savedTrip: TripData? = nil
     @State var navigateToYourTrips: Bool = false
-        
+    let locations = [
+        "New York",
+        "Los Angeles",
+        "Chicago",
+        "San Francisco",
+        "Miami",
+        "London",
+        "Paris",
+        "Berlin",
+        "Rome",
+        "Madrid",
+        "Boston",
+        "Denver",
+        "Las Vegas",
+        "Houston",
+        "Phoenix"
+    ]
     @ObservedObject var tripManager: TripManager = TripManager(databaseManager: DatabaseManager())
     @EnvironmentObject var businessModel: BusinessModel
     
@@ -15,9 +31,9 @@ struct TripBuilderView: View {
             businessModel.cities
     }
         
-    var locations: [String] {
-            cities.map { $0.name }
-    }
+//    var locations: [String] {
+//            cities.map { $0.name }
+//    }
     
     var body: some View {
         NavigationView {
