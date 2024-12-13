@@ -94,6 +94,9 @@ struct TripBuilderView: View {
                         Button("No") {
                             showWeb = true
                             savedTrip = nil
+                            if let trip = tripManager.databaseManager.fetchLastInsertedTrip() {
+                                tripManager.databaseManager.deleteTrip(id: trip.id)
+                            }
                         }
                         .foregroundColor(.red)
                         .padding()
@@ -107,6 +110,7 @@ struct TripBuilderView: View {
                                 savedTrip = nil
                                 navigateToYourTrips = true
                             }
+                            
                         }
                         .foregroundColor(.white)
                         .padding()
